@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>jQWidgets Material Design</title>
+    <!-- add the jQWidgets base styles and one of the theme stylesheets -->
+    <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="jqwidgets/styles/jqx.material.css" type="text/css" />
+    
+    <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdate.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxscheduler.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxscheduler.api.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxtooltip.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxwindow.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxradiobutton.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/globalization/globalize.js"></script>
+</head>
+<body>
+	<div id="scheduler"></div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url_ = "../data/sample.txt";
+        // prepare the data */
+        var data_ = [{
+                    "id": "id1",
+                    "description": "George brings projector for presentations.",
+                    "location": "",
+                    "subject": "Quarterly Project Review Meeting",
+                    "calendar": "Room 1",
+                    "start": new Date(2015, 10, 23, 9, 0, 0),
+                    "end": new Date(2015, 10, 23, 16, 0, 0)
+                    },{
+                    "id": "id2",
+                    "description": "",
+                    "location": "",
+                    "subject": "IT Group Mtg.",
+                    "calendar": "Room 2",
+                    "start": new Date(2015, 10, 24, 10, 0, 0),
+                    "end": new Date(2015, 10, 24, 15, 0, 0)
+                    },{
+                    "id": "id3",
+                    "description": "",
+                    "location": "",
+                    "subject": "Course Social Media",
+                    "calendar": "Room 3",
+                    "start": new Date(2015, 10, 27, 11, 0, 0),
+                    "end": new Date(2015, 10, 27, 13, 0, 0)
+                    },{
+                    "id": "id4",
+                    "description": "",
+                    "location": "",
+                    "subject": "New Projects Planning",
+                    "calendar": "Room 2",
+                    "start": new Date(2015, 10, 23, 16, 0, 0),
+                    "end": new Date(2015, 10, 23, 18, 0, 0)
+                    },{
+                    "id": "id5",
+                    "description": "",
+                    "location": "",
+                    "subject": "Interview with James",
+                    "calendar": "Room 1",
+                    "start": new Date(2015, 10, 25, 15, 0, 0),
+                    "end": new Date(2015, 10, 25, 17, 0, 0)
+                    },{
+                    "id": "id6",
+                    "description": "",
+                    "location": "",
+                    "subject": "Interview with Nancy",
+                    "calendar": "Room 4",
+                    "start": new Date(2015, 10, 26, 14, 0, 0),
+                    "end": new Date(2015, 10, 26, 16, 0, 0)
+                    }];
+
+        var source =
+        {
+            dataType: "json",
+            dataFields: [
+                { name: 'id', type: 'string' },
+                { name: 'description', type: 'string' },
+                { name: 'location', type: 'string' },
+                { name: 'subject', type: 'string' },
+                { name: 'calendar', type: 'string' },
+                { name: 'start', type: 'date' },
+                { name: 'end', type: 'date' }
+            ],
+            id: 'id',
+            localdata: data_
+        };
+        var adapter = new $.jqx.dataAdapter(source, { contentType: 'application/json; charset=utf-8' });
+      
+        $('#scheduler').on('appointmentChange', function (event) { 
+            var args = event.args; 
+            var appointment = args.appointment.jqxAppointment; 
+            var odata = args.appointment.originalData;
+            //console.log(changedAppointments);
+            console.log(JSON.stringify(appointment));
+            console.log(JSON.stringify(odata));
+            console.log(JSON.stringify(args.appointment));
+            //function update();
+            return odata;
+            
+        });
+
+        $('#scheduler').on('appointmentAdd', function (event) { 
+            var args = event.args; 
+            var appointment = args.appointment; 
+            var odata = appointment.originalData;
+            alert(JSON.stringify(appointment));
+            alert(JSON.stringify(odata));
+            //function add();
+            return odata;
+        });
+
+        $('#scheduler').on('appointmentDelete', function (event) { 
+            var args = event.args; 
+            var appointment = args.appointment; 
+            var odata = appointment.originalData;
+            alert(JSON.stringify(appointment));
+            alert(JSON.stringify(odata));
+            //function delete();
+            return odata;
+
+        });
+        
+        var changedAppointments ;
+        $("#scheduler").jqxScheduler({
+            date: new $.jqx.date(2015, 11, 23),
+            width: 700,
+            height: 500,
+            source: adapter,
+            view: 'weekView',
+            showLegend: true,
+            ready: function () {
+                $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+                
+                changedAppointments = $('#scheduler').jqxScheduler('changedAppointments');
+                
+            },
+            resources:
+            {
+                colorScheme: "scheme08",
+                dataField: "calendar",
+                source: new $.jqx.dataAdapter(source)
+            },
+            appointmentDataFields:
+            {
+                from: "start",
+                to: "end",
+                id: "id",
+                description: "description",
+                location: "place",
+                subject: "subject",
+                resourceId: "calendar",
+            },
+            views:
+            [
+                'dayView',
+                'weekView',
+                'monthView'
+            ]
+        });
+    });
+</script>
+</html>
