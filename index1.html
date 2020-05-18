@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>INDEX</title>
+    <title>1INDEX</title>
     <!-- add the jQWidgets base styles and one of the theme stylesheets -->
     <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
     <link rel="stylesheet" href="jqwidgets/styles/jqx.material.css" type="text/css" />
@@ -31,58 +31,7 @@
 </body>
 <script type="text/javascript">
     $(document).ready(function () {
-        var url_ = "../data/sample.txt";
-        // prepare the data */
-        var data_ = [{
-                    "id": "id1",
-                    "description": "George brings projector for presentations.",
-                    "location": "",
-                    "subject": "Quarterly Project Review Meeting",
-                    "calendar": "Room 1",
-                    "start": new Date(2015, 10, 23, 9, 0, 0),
-                    "end": new Date(2015, 10, 23, 16, 0, 0)
-                    },{
-                    "id": "id2",
-                    "description": "",
-                    "location": "",
-                    "subject": "IT Group Mtg.",
-                    "calendar": "Room 2",
-                    "start": new Date(2015, 10, 24, 10, 0, 0),
-                    "end": new Date(2015, 10, 24, 15, 0, 0)
-                    },{
-                    "id": "id3",
-                    "description": "",
-                    "location": "",
-                    "subject": "Course Social Media",
-                    "calendar": "Room 3",
-                    "start": new Date(2015, 10, 27, 11, 0, 0),
-                    "end": new Date(2015, 10, 27, 13, 0, 0)
-                    },{
-                    "id": "id4",
-                    "description": "",
-                    "location": "",
-                    "subject": "New Projects Planning",
-                    "calendar": "Room 2",
-                    "start": new Date(2015, 10, 23, 16, 0, 0),
-                    "end": new Date(2015, 10, 23, 18, 0, 0)
-                    },{
-                    "id": "id5",
-                    "description": "",
-                    "location": "",
-                    "subject": "Interview with James",
-                    "calendar": "Room 1",
-                    "start": new Date(2015, 10, 25, 15, 0, 0),
-                    "end": new Date(2015, 10, 25, 17, 0, 0)
-                    },{
-                    "id": "id6",
-                    "description": "",
-                    "location": "",
-                    "subject": "Interview with Nancy",
-                    "calendar": "Room 4",
-                    "start": new Date(2015, 10, 26, 14, 0, 0),
-                    "end": new Date(2015, 10, 26, 16, 0, 0)
-                    }];
-
+        
         var source =
         {
             dataType: "json",
@@ -92,11 +41,14 @@
                 { name: 'location', type: 'string' },
                 { name: 'subject', type: 'string' },
                 { name: 'calendar', type: 'string' },
-                { name: 'start', type: 'date' },
-                { name: 'end', type: 'date' }
+                { name: 'unit', type: 'string' },
+                { name: 'weight', type: 'string' },
+                { name: 'sum', type: 'string' },
+                { name: 'start', type: 'date', format: "yyyy-MM-dd HH:mm" },
+                { name: 'end', type: 'date', format: "yyyy-MM-dd HH:mm" }
             ],
             id: 'id',
-            localdata: data_
+            url: 'data/sample.txt'
         };
         var adapter = new $.jqx.dataAdapter(source, { contentType: 'application/json; charset=utf-8' });
       
@@ -153,6 +105,66 @@
                 $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
                 
             },
+
+
+            // called when the dialog is craeted.
+            editDialogCreate: function (dialog, fields, editAppointment) {
+                    // hide repeat option
+                    fields.repeatContainer.hide();
+                    // hide status option
+                    fields.statusContainer.hide();
+                    // hide timeZone option
+                    fields.timeZoneContainer.hide();
+                    // hide color option
+                    fields.colorContainer.hide();
+                    fields.subjectLabel.html("Title");
+                    fields.locationLabel.html("Where");
+                    fields.fromLabel.html("Start");
+                    fields.toLabel.html("End");
+                    fields.resourceLabel.html("Calendar");
+                    
+                    // add custom print button.
+                    var unit = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Unit</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>'),
+                        weight = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Weight</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>'),
+                        sum = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Sum</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>');
+
+                        fields.resourceContainer.append(unit);
+                        fields.resourceContainer.append(weight);
+                        fields.resourceContainer.append(sum);
+                        /* var titleContainer = $('.jqx-scheduler-edit-dialog-label')[0].nextElementSibling;
+                        var titleInput = $(titleContainer).find('input');
+                        titleInput.val('prefix'); */
+                   
+                   // fields.locationContainer.after($("<label>Weight : </label><input id='Weight'/>"));
+                    //fields.locationContainer.after($("<label>Unit : </label><input id='Unit'/>"));
+                    //fields.locationContainer.after($("<label>Sum : </label><input id='sum'/>"));
+//                     var titleContainer = $('.jqx-scheduler-edit-dialog-label')[0].nextElementSibling;
+// var titleInput = $(titleContainer).find('input');
+// titleInput.val('Sum');
+                },
+                
+                editDialogClose: function (dialog, fields, editAppointment) {
+                },
+               
+                editDialogKeyDown: function (dialog, fields, editAppointment, event) {
+                },
+
+
             resources:
             {
                 colorScheme: "scheme08",
@@ -168,6 +180,9 @@
                 location: "place",
                 subject: "subject",
                 resourceId: "calendar",
+                unit: "unit",
+                weight: "weight",
+                sum: "sum"
             },
             views:
             [
