@@ -62,8 +62,13 @@
                 odata = args.appointment.originalData,
                 type_ = "Update";
             //console.log(changedAppointments);
-            conslog(JSON.stringify(appointment),type_);
-            conslog(JSON.stringify(odata),type_);
+            //conslog(JSON.stringify(appointment),type_);
+            //conslog(JSON.stringify(odata),type_);
+            //console.log(event.args.appointment);
+            console.log(event.args);
+            //console.log(event.$('#weight').val());
+            console.log('weight value - '+$('#weight').jqxInput('val'));
+            console.log('unit selected value - '+$('#unit').jqxDropDownList('val'));
             //conslog(JSON.stringify(args.appointment));
             //function update();
             return odata;
@@ -93,7 +98,7 @@
 
         });
         
-
+        //var inputbm = null;
         $("#scheduler").jqxScheduler({
             date: new $.jqx.date(2015, 11, 23),
             width: 700,
@@ -106,7 +111,7 @@
                 
             },
 
-
+            
             // called when the dialog is craeted.
             editDialogCreate: function (dialog, fields, editAppointment) {
                     // hide repeat option
@@ -123,7 +128,33 @@
                     fields.toLabel.html("End");
                     fields.resourceLabel.html("Calendar");
                     
-                    // add custom print button.
+                    //INPUT
+                    var inputbm = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Weight</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input id="weight" class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>');
+                    fields.resourceContainer.append(inputbm);
+                    $('#weight').jqxInput({ theme: this.theme });
+
+                    //DROPDOWN
+                    var sourceddl = [
+                            "Kilo",
+                            "Liter",
+                            "Pieces"
+                        ];
+                                            
+                    ddlbm = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Unit</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<div id="unit"></div>'+
+                                '</div>'+
+                                '</div>');
+                    fields.resourceContainer.append(ddlbm);
+                    $("#unit").jqxDropDownList({ source: sourceddl, selectedIndex: 2, width: '200px', height: '25px',theme: this.theme});
+                    
+                   /*  // add custom print button.
                     var unit = $('<div>'+
                                 '<div class="jqx-scheduler-edit-dialog-label">Unit</div>'+
                                 '<div class="jqx-scheduler-edit-dialog-field">'+
@@ -141,11 +172,11 @@
                                 '<div class="jqx-scheduler-edit-dialog-field">'+
                                 '<input class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
                                 '</div>'+
-                                '</div>');
+                                '</div>'); 
 
                         fields.resourceContainer.append(unit);
                         fields.resourceContainer.append(weight);
-                        fields.resourceContainer.append(sum);
+                        fields.resourceContainer.append(sum);*/
                         /* var titleContainer = $('.jqx-scheduler-edit-dialog-label')[0].nextElementSibling;
                         var titleInput = $(titleContainer).find('input');
                         titleInput.val('prefix'); */
