@@ -95,6 +95,14 @@
             console.log('doctor selected value - '+$('#doctor').jqxDropDownList('val'));
             conslog(JSON.stringify(appointment),type_);
             conslog(JSON.stringify(odata),type_);
+
+            console.log('-- 1 - getDataAppointments --');
+            //var dataAppointmentsArray =  $("#scheduler").jqxScheduler('getDataAppointments');
+            //var dataAppointmentsArray =  $("#scheduler").jqxScheduler('changedAppointments');
+            var dataAppointmentsArray = $('#scheduler').jqxScheduler('getAppointments');
+            $.each( dataAppointmentsArray, function( key, value ) {
+                console.log(key + ": " + value );
+            });
             //function update();
             return odata;
             
