@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>1INDEX</title>
+    <!-- add the jQWidgets base styles and one of the theme stylesheets -->
+    <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="jqwidgets/styles/jqx.material.css" type="text/css" />
+    
+    <script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdate.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxscheduler.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxscheduler.api.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxtooltip.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxwindow.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxradiobutton.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/globalization/globalize.js"></script>
+</head>
+<body>
+	<div id="scheduler"></div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var source =
+        {
+            dataType: "json",
+            dataFields: [
+                { name: 'id', type: 'string' },
+                { name: 'description', type: 'string' },
+                { name: 'location', type: 'string' },
+                { name: 'subject', type: 'string' },
+                { name: 'calendar', type: 'string' },
+                { name: 'unit', type: 'string' },
+                { name: 'weight', type: 'string' },
+                { name: 'sum', type: 'string' },
+                { name: 'start', type: 'date', format: "yyyy-MM-dd HH:mm" },
+                { name: 'end', type: 'date', format: "yyyy-MM-dd HH:mm" }
+            ],
+            id: 'id',
+            url: 'data/sample.txt'
+        };
+        var adapter = new $.jqx.dataAdapter(source, { contentType: 'application/json; charset=utf-8' });
+      
+        //DROPDOWN DATA BEG
+
+        var sourceddldata = [
+                            {"id":"Kilo", "name":"Kilogramm asd asd "
+                            },{
+                            "id":"Liter", "name":"Liter sdf sdf "
+                            },{
+                            "id":"Piece", "name":"Piece sdf sdf "
+                            }
+                    ];
+
+                    var sourceddl = {
+                        dataType: "json",
+                        dataFields: [{
+                            id: 'id',
+                            name: 'name'     
+                        }]
+                    }
+                                       
+                    var ddldataAdapter = new $.jqx.dataAdapter(sourceddldata);
+
+        //DROPDOWN DATA END
+
+        function conslog(arg, type){
+            console.log(type + "__" +arg+"\n");
+        }
+      
+        $('#scheduler').on('appointmentChange', function (event) { 
+            var args = event.args, 
+                appointment = args.appointment.jqxAppointment,
+                odata = args.appointment.originalData,
+                type_ = "Update";
+            //console.log(changedAppointments);
+            //conslog(JSON.stringify(appointment),type_);
+            //conslog(JSON.stringify(odata),type_);
+            //console.log(event.args.appointment);
+            console.log(event.args);
+            //console.log(event.$('#weight').val());
+            console.log('weight value - '+$('#weight').jqxInput('val'));
+            console.log('unit selected value - '+JSON.stringify($('#unit').jqxDropDownList('val')));
+            console.log('checkbm1 isChecked - '+$('#check1').jqxCheckBox('checked'));
+            console.log('checkbm2 isChecked - '+$('#check2').jqxCheckBox('checked'));
+            console.log('checkbm3 isChecked - '+$('#check3').jqxCheckBox('checked'));
+            //conslog(JSON.stringify(args.appointment));
+            //function update();
+            return odata;
+            
+        });
+
+        $('#scheduler').on('appointmentAdd', function (event) { 
+            var args = event.args,
+                appointment = args.appointment.jqxAppointment,
+                odata = args.appointment.originalData,
+                type_ = "Add";
+            conslog(JSON.stringify(appointment),type_);
+            conslog(JSON.stringify(odata),type_);
+            //function add();
+            return odata;
+        });
+
+        $('#scheduler').on('appointmentDelete', function (event) { 
+            var args = event.args,
+                appointment = args.appointment.jqxAppointment,
+                odata = args.appointment.originalData,
+                type_ = "Delete";
+            conslog(JSON.stringify(appointment),type_);
+            conslog(JSON.stringify(odata),type_);
+            //function delete();
+            return odata;
+
+        });
+        
+        //var inputbm = null;
+        $("#scheduler").jqxScheduler({
+            date: new $.jqx.date(2015, 11, 23),
+            width: 700,
+            height: 500,
+            source: adapter,
+            view: 'weekView',
+            showLegend: true,
+            ready: function () {
+                $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+                
+            },
+
+            
+            // called when the dialog is craeted.
+            editDialogCreate: function (dialog, fields, editAppointment) {
+                    // hide repeat option
+                    fields.repeatContainer.hide();
+                    // hide status option
+                    fields.statusContainer.hide();
+                    // hide timeZone option
+                    fields.timeZoneContainer.hide();
+                    // hide color option
+                    fields.colorContainer.hide();
+                    fields.subjectLabel.html("Title");
+                    fields.locationLabel.html("Where");
+                    fields.fromLabel.html("Start");
+                    fields.toLabel.html("End");
+                    fields.resourceLabel.html("Calendar");
+                    
+                    //INPUT
+                    var inputbm = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Weight</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input id="weight" class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>');
+                    fields.resourceContainer.append(inputbm);
+                    $('#weight').jqxInput({ theme: this.theme });
+
+                    //DROPDOWN
+                    ddlbm = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Unit</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<div id="unit"></div>'+
+                                '</div>'+
+                                '</div>');
+                    fields.resourceContainer.append(ddlbm);
+                    $("#unit").jqxDropDownList({
+                        source: ddldataAdapter, 
+                        displayMember: "name", 
+                        valueMember: "id",
+                        selectedIndex: 2, 
+                        checkboxes: true, 
+                        width: '200px', 
+                        height: '25px',
+                        theme: this.theme,
+                        /* renderer: function (index, label, value){
+                            var datarecord = data[index];
+                            return datarecord.firstname + " " + datarecord.lastname;
+                        } */
+                    });
+                    
+                    //CHECKBOX
+                    var checkbm = $('<div>'+
+                                    '<div class="jqx-scheduler-edit-dialog-label" >Unit</div>'+
+                                    '<div class="jqx-scheduler-edit-dialog-field" style="display: flex; justify-content: space-around">'+
+                                    '<div id="check1">Повторно</div>'+
+                                    '<div id="check2">Ордер</div>'+
+                                    '<div id="check3">Страховой полис</div>'+
+                                    '</div>'+
+                                    '</div>');
+                    fields.resourceContainer.append(checkbm);                                    
+                    $("#check1").jqxCheckBox({
+                        width: '200px',
+                        height: 25,
+                        theme: this.theme
+                    });
+                    
+                    $("#check2").jqxCheckBox({
+                        width: '200px',
+                        height: 25,
+                        theme: this.theme
+                    });
+                    
+                    $("#check3").jqxCheckBox({
+                        width: '200px',
+                        height: 25,
+                        theme: this.theme
+                    });
+
+                   /*  // add custom print button.
+                    var unit = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Unit</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>'),
+                        weight = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Weight</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>'),
+                        sum = $('<div>'+
+                                '<div class="jqx-scheduler-edit-dialog-label">Sum</div>'+
+                                '<div class="jqx-scheduler-edit-dialog-field">'+
+                                '<input class="jqx-widget-content jqx-input jqx-widget jqx-rc-all" role="textbox" style="width: 100%; height: 25px; box-sizing: border-box;" type="text" value="">'+
+                                '</div>'+
+                                '</div>'); 
+
+                        fields.resourceContainer.append(unit);
+                        fields.resourceContainer.append(weight);
+                        fields.resourceContainer.append(sum);*/
+                        /* var titleContainer = $('.jqx-scheduler-edit-dialog-label')[0].nextElementSibling;
+                        var titleInput = $(titleContainer).find('input');
+                        titleInput.val('prefix'); */
+                   
+                   // fields.locationContainer.after($("<label>Weight : </label><input id='Weight'/>"));
+                    //fields.locationContainer.after($("<label>Unit : </label><input id='Unit'/>"));
+                    //fields.locationContainer.after($("<label>Sum : </label><input id='sum'/>"));
+//                     var titleContainer = $('.jqx-scheduler-edit-dialog-label')[0].nextElementSibling;
+// var titleInput = $(titleContainer).find('input');
+// titleInput.val('Sum');
+                },
+                
+                editDialogClose: function (dialog, fields, editAppointment) {
+                },
+               
+                editDialogKeyDown: function (dialog, fields, editAppointment, event) {
+                },
+
+
+            resources:
+            {
+                colorScheme: "scheme08",
+                dataField: "calendar",
+                source: new $.jqx.dataAdapter(source)
+            },
+            appointmentDataFields:
+            {
+                from: "start",
+                to: "end",
+                id: "id",
+                description: "description",
+                location: "place",
+                subject: "subject",
+                resourceId: "calendar",
+                unit: "unit",
+                weight: "weight",
+                sum: "sum"
+            },
+            views:
+            [
+                'dayView',
+                'weekView',
+                'monthView'
+            ]
+        });
+    });
+</script>
+</html>
